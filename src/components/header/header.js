@@ -23,7 +23,6 @@ const headerStyle = {
   headerContainer: {
     display: 'flex',
     justifyContent: 'center',
-    margin: '40px'
   },
   headerImg: {
     maxHeight: '120px'

@@ -2,64 +2,101 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 
-//lib import
-import  debounce  from 'lodash/debounce'
-
-
 //internal import
 import { setUserInputToState } from './search-actions';
-import Movie from '../Movies/movie'
+import MoviesList from '../movies-list/Movies-list'
 
 
 class Search extends Component {
   constructor(props) {
     super(props);
     this.onUserSearch = this.onUserSearch.bind(this);
+    this.onSearchClicked = this.onSearchClicked.bind(this);
+    this.state = {
+      search:''
+    }
+
   }
 
+  onSearchClicked = event => {
+    event.preventDefault();
+    event.stopPropagation();
+      this.props.setUserInputToState({ userInput: this.state.search, year: this.state.year });
+  }
   onUserSearch = event => {
-    //debouncing after 500 milliseconds 
-    debouncedSearch(event.target.value,this.props.setUserInputToState);
+    this.setState({ search: event.target.value })
   };
+  onUserYearSearch = event => {
+    this.setState({ year: event.target.value });
+  }
   render() {
     return (
       <section >
-        <div style={searchStyle.searchContainer}>
-          <input autoFocus style={searchStyle.searchInput} onChange={this.onUserSearch} ></input>
-        </div>
-        <Movie movieTitle={this.state ? this.state.search : null} />
-      </section>
+        <form onSubmit={this.onSearchClicked}>
+          <div style={searchStyle}>
+            <div style={searchStyle.searchContainer}>
+              <p>Search By Movie Title</p>
+              <input type="text" autoFocus style={searchStyle.searchTitleInput} onChange={this.onUserSearch}  ></input>
+            </div>
+            <div style={searchStyle.searchContainer}>
+              <p>Release Year (*this is optional)</p>
+              <input type="text" style={searchStyle.searchYearInput} onChange={this.onUserYearSearch}></input>
+            </div>
+            <input type='submit' style={searchStyle.blueButon} value='Search'></input>
+          </div>
+        </form>
+        <MoviesList />
+      </section >
     );
   }
 }
 
 //component style
 const searchStyle = {
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  justifyContent: 'center',
   searchContainer: {
     display: 'flex',
-    justifyContent: 'center',
-    margin: '40px'
+    flexDirection: 'column',
+    alignItems: 'center'
   },
-  searchInput: {
+  searchTitleInput: {
     height: '44px',
     width: '560px',
     borderRadius: '50px',
     border: '2px solid black',
     outline: "none",
     fontSize: '24px',
-    paddingLeft: '20px '
-  }
+    paddingLeft: '20px'
+  },
+  blueButon: {
+    width: '150px',
+    height: '40px',
+    borderRadius: '50px',
+    background: '#0171ce',
+    color: '#ffff',
+    fontSize: '20px',
+    marginTop: '20px'
+  },
+  searchYearInput: {
+    height: '25px',
+    width: '160px',
+    borderRadius: '50px',
+    border: '2px solid black',
+    outline: "none",
+    fontSize: '14px',
+    paddingLeft: '20px'
+  },
 }
-const debouncedSearch = debounce(function(userInput,func){
-    func(userInput);
-    //the 500 milliseconds should be in conf file 
-}, 500)
+
 const mapStateToProps = state => ({
-  userInput: state.userInput,
+  userInput: state.search,
 });
 const mapDispatchToProps = dispatch => {
   return {
-    setUserInputToState: (userInput) => dispatch(setUserInputToState(userInput)),
+    setUserInputToState: (search) => dispatch(setUserInputToState(search)),
   };
 };
 

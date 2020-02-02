@@ -2,10 +2,10 @@
 import { SET_INPUT } from "./search-reducer";
 
 //search Actions 
-export const setUserInputToState = (userInput) => {
+export const setUserInputToState = (search) => {
   return {
     type: SET_INPUT,
-    payload: userInput
+    search: search
   };
 };
 

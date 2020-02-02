@@ -4,7 +4,11 @@ import rootReducer from './reducers';
 
 const initialState = {
   movie:{},
-  search:''
+  search:{
+    userInput:'',
+    year:''
+  },
+  moviesList:[],
 };
 
 //to make api calls in react 
